@@ -6,8 +6,8 @@
 	"require": {
 		"php": "^8.0",
 		"php-64bit": "*",
-		"venitynetwork/binaryutils": "^0.2.0",
-		"venitynetwork/raklib": "^0.13.1 || ^0.14.0"
+		"venitynetwork/binaryutils": "dev-master",
+		"venitynetwork/raklib": "dev-master"
 	},
 	"require-dev": {
 		"phpstan/phpstan": "1.10.1",
