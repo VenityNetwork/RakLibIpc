@@ -25,11 +25,9 @@ use function ord;
 use function substr;
 
 final class RakLibToUserThreadMessageReceiver{
-	private InterThreadChannelReader $channel;
-
-	public function __construct(InterThreadChannelReader $channel){
-		$this->channel = $channel;
-	}
+	public function __construct(
+		private InterThreadChannelReader $channel
+	){}
 
 	public function handle(ServerEventListener $listener) : bool{
 		if(($packet = $this->channel->read()) !== null){
@@ -70,8 +68,7 @@ final class RakLibToUserThreadMessageReceiver{
 			}elseif($id === ITCProtocol::PACKET_CLOSE_SESSION){
 				$sessionId = Binary::readInt(substr($packet, $offset, 4));
 				$offset += 4;
-				$len = ord($packet[$offset++]);
-				$reason = substr($packet, $offset, $len);
+				$reason = ord($packet[$offset]);
 				$listener->onClientDisconnect($sessionId, $reason);
 			}elseif($id === ITCProtocol::PACKET_ACK_NOTIFICATION){
 				$sessionId = Binary::readInt(substr($packet, $offset, 4));

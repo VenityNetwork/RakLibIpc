@@ -25,12 +25,9 @@ use function inet_pton;
 use function strlen;
 
 final class RakLibToUserThreadMessageSender implements ServerEventListener{
-
-	private InterThreadChannelWriter $channel;
-
-	public function __construct(InterThreadChannelWriter $channel){
-		$this->channel = $channel;
-	}
+	public function __construct(
+		private InterThreadChannelWriter $channel
+	){}
 
 	public function onClientConnect(int $sessionId, string $address, int $port, int $clientId) : void{
 		$rawAddr = inet_pton($address);
@@ -46,11 +43,11 @@ final class RakLibToUserThreadMessageSender implements ServerEventListener{
 		);
 	}
 
-	public function onClientDisconnect(int $sessionId, string $reason) : void{
+	public function onClientDisconnect(int $sessionId, int $reason) : void{
 		$this->channel->write(
 			chr(ITCProtocol::PACKET_CLOSE_SESSION) .
 			Binary::writeInt($sessionId) .
-			chr(strlen($reason)) . $reason
+			chr($reason)
 		);
 	}
 
