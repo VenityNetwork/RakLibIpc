@@ -23,6 +23,7 @@ use raklib\protocol\PacketReliability;
 use raklib\server\ipc\UserToRakLibThreadMessageProtocol as ITCProtocol;
 use raklib\server\ServerInterface;
 use function chr;
+use function serialize;
 use function strlen;
 
 class UserToRakLibThreadMessageSender implements ServerInterface{
@@ -79,5 +80,9 @@ class UserToRakLibThreadMessageSender implements ServerInterface{
 
 	public function addRawPacketFilter(string $regex) : void{
 		$this->channel->write(chr(ITCProtocol::PACKET_RAW_FILTER) . $regex);
+	}
+
+	public function setAllowedIPs(?array $ips): void{
+		$this->channel->write(chr(ITCProtocol::PACKET_SET_ALLOWED_IPS) . serialize($ips));
 	}
 }

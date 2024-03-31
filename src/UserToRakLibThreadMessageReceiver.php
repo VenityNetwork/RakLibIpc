@@ -21,10 +21,12 @@ use pocketmine\utils\Binary;
 use raklib\protocol\EncapsulatedPacket;
 use raklib\protocol\PacketReliability;
 use raklib\server\ipc\UserToRakLibThreadMessageProtocol as ITCProtocol;
+use raklib\server\Server;
 use raklib\server\ServerEventSource;
 use raklib\server\ServerInterface;
 use function ord;
 use function substr;
+use function unserialize;
 
 final class UserToRakLibThreadMessageReceiver implements ServerEventSource{
 	public function __construct(
@@ -89,6 +91,10 @@ final class UserToRakLibThreadMessageReceiver implements ServerEventSource{
 			}elseif($id === ITCProtocol::PACKET_RAW_FILTER){
 				$pattern = substr($packet, $offset);
 				$server->addRawPacketFilter($pattern);
+			}elseif($id === ITCProtocol::PACKET_SET_ALLOWED_IPS){
+				if($server instanceof Server){
+					$server->setAllowedIPs(unserialize(substr($packet, $offset)));
+				}
 			}
 
 			return true;
